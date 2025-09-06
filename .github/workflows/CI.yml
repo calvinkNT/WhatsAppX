@@ -1,0 +1,43 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        os: [ubuntu-latest, windows-latest]
+        
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v4
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    #     cache: 'npm'
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      
+    - run: bun install
+      working-directory: Server
+      
+    - run: bun build --compile server.ts --bytecode --outfile=WatSup
+      working-directory: Server
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: Server-${{ matrix.os }}
+        path: Server/WatSup*

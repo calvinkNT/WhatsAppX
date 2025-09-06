@@ -11,10 +11,10 @@
     "axios": "^1.11.0",
     "express": "^5.1.0",
     "fluent-ffmpeg": "^2.1.3",
-    "puppeteer-core": "^24.17.1",
+    "puppeteer-core": "^24.19.0",
     "qrcode": "^1.5.4",
     "typescript": "^5.9.2",
-    "whatsapp-web.js": "^1.33.1"
+    "whatsapp-web.js": "^1.33.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

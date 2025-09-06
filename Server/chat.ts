@@ -183,7 +183,7 @@ export function setUpChatSetters(app: express.Express, client: Client) {
     res.status(resp ? 200 : 500);
   });
 
-  app.post("/profileMute/:id", async (req, res) => {
+  app.post("/Mute/:id", async (req, res) => {
     let resp: { isMuted: boolean; muteExpiration: number };
 
     if (req.query.mute === "1") {
@@ -203,7 +203,7 @@ export function setUpChatSetters(app: express.Express, client: Client) {
     }
   });
 
-  app.post("/profileArchiveChat/:id", async (req, res) => {
+  app.post("/ArchiveChat/:id", async (req, res) => {
     if (req.query.archive === "1") {
       const resp = await client.archiveChat(req.params.id);
       res.status(resp ? 200 : 500);
@@ -213,7 +213,7 @@ export function setUpChatSetters(app: express.Express, client: Client) {
     }
   });
 
-  app.post("/profileDeleteChat/:id", async (req, res) => {
+  app.post("/DeleteChat/:id", async (req, res) => {
     const resp = await (await client.getChatById(req.params.id)).delete();
     res.status(resp ? 200 : 500);
   });

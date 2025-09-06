@@ -10,7 +10,8 @@ import QRCode from "qrcode";
 import * as utils from "./utils";
 import { setUpChatGetters, setUpListGetters } from "./chat";
 
-console.log("[FFmpeg] Using ffmpeg from:", utils.ffmpegPath);
+console.log("[FFmpeg] Using ffmpeg from: ", utils.ffmpegPath);
+console.log("Using browser from: ", utils.SERVER_CONFIG.CHROME_PATH);
 
 if (!fs.existsSync(utils.ffmpegPath))
   console.log("[Warning] FFmpeg does not exist!");
@@ -60,9 +61,7 @@ const client = new Client({
       "--no-proxy-server",
       "--window-size=1,1",
     ],
-    ...(utils.SERVER_CONFIG.CHROME_PATH
-      ? { executablePath: utils.SERVER_CONFIG.CHROME_PATH }
-      : {}),
+    executablePath: utils.SERVER_CONFIG.CHROME_PATH,
   },
   authStrategy: new LocalAuth(),
 });
@@ -680,7 +679,7 @@ app.post("/setStatusInfo/:statusMsg", async (req, res) => {
   }
 });
 
-app.post("/deleteMessage/:messageId/:everyone", async (req, res) => {
+app.post("/deleteMessage/:messageId", async (req, res) => {
   try {
     const messageId = decodeURIComponent(req.params.messageId);
     const message = await client.getMessageById(messageId);
@@ -689,10 +688,10 @@ app.post("/deleteMessage/:messageId/:everyone", async (req, res) => {
       return res.status(404).send("Message not found");
     }
 
-    const deleteForEveryone = req.params.everyone === "2";
-    const result = await message.delete(deleteForEveryone);
+    const deleteForEveryone = req.query.everyone === "1";
+    await message.delete(deleteForEveryone);
 
-    res.status(200).json({ response: result });
+    res.status(200);
   } catch (error) {
     if (!res.headersSent) {
       res.status(500).send(error.message);
